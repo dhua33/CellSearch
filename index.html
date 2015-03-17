@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Cell Search</title>
+    <script src="js/phaser.min.js"></script>
+    <script src="js/Boot.js"></script>
+    <script src="js/Preloader.js"></script>
+    <script src="js/MainMenu.js"></script>
+    <script src="js/Game.js"></script>
+
+<style>
+body
+{
+    color: #000000;
+    font-family: "Avenir", Verdana, sans-serif;
+}
+#readme
+{
+    margin-top: 10px;
+}
+</style>
+
+</head>
+<body bgcolor = "#A6E6FA">
+<script>
+(function() {
+		var game = new Phaser.Game( 800, 600, Phaser.AUTO, 'game');
+    game.state.add('Boot', boot);
+    game.state.add('Preloader', preloader);
+    game.state.add('MainMenu', mainmenu);
+    game.state.add('Game', main);
+    game.state.start('Boot');
+    })();
+</script>
+<div id="game"></div>
+<div id="readme">
+<h2>Cell Search</h2>
+<ul>
+
+<li><strong>High Concept:</strong>
+Find a man's lost cell phone.
+</li>
+
+<li><strong>Player Experience Goals:</strong>
+Simple RPG elements such as NPC, world, and object interaction, all in a simple maze game.
+</li>
+
+<li><strong>Genre:</strong>
+Maze
+</li>
+
+<li><strong>Game play:</strong>
+Use the arrow keys or WASD to move and spacebar to talk to the NPC and pick up the quest item.
+</li>
+
+<li><strong>Prototype goal:</strong>
+Create a simple maze game using tilemaps and having the player have the ability to use different keys to move.
+</li>
+
+<li><strong>Features:</strong>
+Basic RPG movement and NPC and object interaction.
+</li>
+
+<li><strong>Setting/Premise:</strong>
+In a maze in some place.
+</li>
+
+<li><strong>Story:</strong>
+Someone lost their cell phone in a maze. He wants you to find it for him since he can't do it himself.
+</li>
+
+<li><strong>Target Audience:</strong>
+Everyone 10 and up who has interest in cell phones and mazes.
+</li>
+
+<li><strong>Play time:</strong>
+1-5 mins.
+</li>
+
+<li><strong>Strategies:</strong>
+Talk to the NPC and track your movement.
+</li>
+
+<li><strong>Prototype Assets:</strong>
+Phone: http://www.pdclipart.org/displayimage.php?album=search&cat=0&pos=67 
+Tilemap: Buch http://opengameart.org/content/the-field-of-the-floating-islands 
+Sprites by Antifarea: 
+http://opengameart.org/content/antifareas-rpg-sprite-set-1-enlarged-w-transparent-background-fixed 
+Select: 
+https://www.freesound.org/people/killkhan/sounds/150222/ 
+Music: 
+"Journey of Solitude" (Russell Cox / http://ocremix.org) 
+
+</li>
+
+<li><strong>Prototype Closest Other Game:</strong>
+
+</li>
+
+</ul>
+</div>
+</body>
+</html>
