@@ -4,7 +4,9 @@ preloader.prototype = {
 		preload: function() {
 				//images
 				var loading = this.add.sprite(0, 0, 'loading');
-				var loadbar = this.add.sprite(0, 440, 'loadbar');
+				loading.width *= 0.5;
+				loading.height *= 0.5;
+				var loadbar = this.add.sprite(0, 220, 'loadbar');
 				this.load.setPreloadSprite(loadbar);
 				this.load.image('title', 'assets/title.png');
 				this.load.tilemap('map', 'assets/mazeMap.json', null, Phaser.Tilemap.TILED_JSON);

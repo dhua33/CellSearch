@@ -20,6 +20,7 @@ preloader.prototype = {
 				this.load.audio('walk', 'assets/walk.mp3');
 				this.load.audio('music', 'assets/music.mp3');
 				this.load.audio('selectSFX', 'assets/select.mp3');
+				this.load.audio('beep', 'assets/beep.mp3');
 		},
 		create: function() {
 				this.state.start('MainMenu');

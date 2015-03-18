@@ -16,11 +16,11 @@ main.prototype = {
 				
 				// player sprites and properties
 				this.phone = this.add.sprite(535, 30, 'phone');
-				this.p = this.add.sprite(300, 1500, 'player');
+				this.p = this.add.sprite(600, 1500, 'player');
 				this.p.anchor.setTo(0.5, 0.5);
 				this.p.height *= 0.25;
 				this.p.width *= 0.25;
-				this.npc = this.add.sprite(100, 1400, 'npc');
+				this.npc = this.add.sprite(530, 1400, 'npc');
 				this.npc.anchor.setTo(0.5, 0.5);
 				this.npc.height *= 0.25;
 				this.npc.width *= 0.25;
@@ -42,6 +42,9 @@ main.prototype = {
 				this.npc.animations.add('right', [4], 3, true);
 				this.npc.animations.play('down');
 				
+				// foreground
+				this.fg = this.map.createLayer('FG');
+				
 				// UI
 				this.UI = this.add.sprite(0, 250, 'UI');
 				this.UI.height *= 0.5;
@@ -56,7 +59,8 @@ main.prototype = {
 				// audio
 				this.music = this.add.audio('music', 0.3, true);
 				this.sound.walk = this.add.audio('walk', 0.3);
-				this.sound.select = this.add.audio('select', 0.25);
+				this.sound.beep = this.add.audio('beep', 0.3);
+				this.sound.select = this.add.audio('selectSFX', 0.25);
 				this.music.play();
 				
 				// set keyboard controls
@@ -70,18 +74,47 @@ main.prototype = {
 				// dialogue control
 				this.keys.space.onDown.add(this.npcTalk, this);
 				this.win = false;
+				this.wintext = this.add.text(125, 140, "Congratulations, you win.", this.style);
+				this.wintext.fixedToCamera = true;
+				this.wintext.visible = false;
 				this.npcPrompt = false;
 				this.inDialogue = false;
 				this.dialogue = [];
-				this.dialogue[0] = "Hello";
+				this.dialogue[0] = "Thank goodness you're here, I finally made it\nout of the maze.";
+				this.dialogue[1] = "However, I seem to have dropped\nmy cell phone deep inside the maze...";
+				this.dialogue[2] = "My legs have given out so I can't walk.\nPlease find my cell phone!";
+				this.dialogue[3] = "Please bring me my cell phone.";
 				this.npc.i = 0;
 		},
 		npcTalk: function() {
 				if(this.npcPrompt) {
+						this.sound.beep.play();
 						this.inDialogue = true;
+						this.UI.text.setText(this.dialogue[this.npc.i]);
 						
+						this.npc.i += 1;
+						if(this.npc.i > 2) {
+								this.npc.i = 3;
+								this.npcPrompt = false;
+						}
+						if(this.win) {
+								this.UI.text.setText("Thank you kind adventurer. \nI will reward you handsomely.");
+								this.wintext.visible = true;
+								this.game.paused = true;
+						}
 				} else {
-						this.inDialogue = false;
+						if(this.inDialogue) {
+								if(this.UI.visible)
+										this.sound.select.play();
+								this.UI.text.setText("");
+								this.UI.visible = false;
+						}
+				}
+				
+				if(this.physics.arcade.overlap(this.p, this.phone)) {
+						this.sound.select.play();
+						this.win = true;
+						this.phone.visible = false;
 				}
 		},
 		update: function() {
@@ -90,21 +123,22 @@ main.prototype = {
 				this.p.body.velocity.y = 0;
 				
 				// movement
+				this.p.speed = 120;
 				if(this.keys.w.isDown || this.keys.up.isDown) {
 						this.p.animations.play('up');
-						this.p.body.velocity.y = -80;
+						this.p.body.velocity.y = -this.p.speed;
 						this.sound.walk.play('', 0, 0.03, false, false);
 				} else if(this.keys.s.isDown || this.keys.down.isDown) {
 						this.p.animations.play('down');
-						this.p.body.velocity.y = 80;
+						this.p.body.velocity.y = this.p.speed;
 						this.sound.walk.play('', 0, 0.03, false, false);
 				} else if(this.keys.a.isDown || this.keys.left.isDown) {
 						this.p.animations.play('left');
-						this.p.body.velocity.x = -80;
+						this.p.body.velocity.x = -this.p.speed;
 						this.sound.walk.play('', 0, 0.03, false, false);
 				} else if(this.keys.d.isDown || this.keys.right.isDown) {
 						this.p.animations.play('right');
-						this.p.body.velocity.x = 80;
+						this.p.body.velocity.x = this.p.speed;
 						this.sound.walk.play('', 0, 0.03, false, false);
 				} else {
 						this.p.animations.stop();
@@ -132,8 +166,15 @@ main.prototype = {
 						}
 				} else {
 						this.npcPrompt = false;
+						this.inDialogue = false;
 						this.UI.visible = false;
 						this.UI.text.setText("");
+				}
+				
+				// cell phone
+				if(this.physics.arcade.overlap(this.p, this.phone) && this.win === false) {
+						this.UI.visible = true;
+						this.UI.text.setText("Press Space to pick up the cell phone");
 				}
 		}
 }
