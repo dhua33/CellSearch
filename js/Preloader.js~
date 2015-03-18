@@ -7,16 +7,17 @@ preloader.prototype = {
 				var loadbar = this.add.sprite(0, 440, 'loadbar');
 				this.load.setPreloadSprite(loadbar);
 				this.load.image('title', 'assets/title.png');
-				this.load.tilemap('map', 'assets/raceMap.json', null, Phaser.Tilemap.TILED_JSON);
-				this.load.image('tiles', 'assets/raceTrack.jpg');
-				this.load.image('win', 'assets/win.png');
-				this.load.image('fail', 'assets/fail.png');
-				this.load.image('line', 'assets/finish.png');
-				//cars
-				this.load.image('car1', 'assets/car1.png');
-				this.load.image('car2', 'assets/car2.png');
+				this.load.tilemap('map', 'assets/mazeMap.json', null, Phaser.Tilemap.TILED_JSON);
+				this.load.image('snowTiles', 'assets/snowTiles.png');
+				this.load.image('phone', 'assets/phone.png');
+				this.load.image('UI', 'assets/UI.png');
+				//sprites
+				this.load.spritesheet('player', 'assets/player.png', 89, 100);
+				this.load.spritesheet('npc', 'assets/npc.png', 89, 100);
 				//audio
+				this.load.audio('walk', 'assets/walk.mp3');
 				this.load.audio('music', 'assets/music.mp3');
+				this.load.audio('selectSFX', 'assets/select.mp3');
 		},
 		create: function() {
 				this.state.start('MainMenu');

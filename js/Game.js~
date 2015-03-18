@@ -3,10 +3,8 @@ var main = function(game) {};
 main.prototype = {
 		create: function() {
 				// set world
-				this.cam = this.add.sprite(400, 2900, 'car2');
-				this.cam.visible = false;
 				this.map = this.game.add.tilemap('map');
-				this.map.addTilesetImage('raceTrack', 'tiles');
+				this.map.addTilesetImage('tiles', 'snowTiles');
 				this.stage.backgroundColor = '#fff';
 				this.physics.startSystem(Phaser.Physics.ARCADE);
 				
@@ -14,22 +12,34 @@ main.prototype = {
 				this.bg = this.map.createLayer('BG');
 				this.walls = this.map.createLayer('Walls');
 				this.bg.resizeWorld();
-				this.map.setCollisionBetween(1, 400, true, 'Walls');
-				this.line = this.add.sprite(490, 65, 'line');
+				this.map.setCollisionBetween(1, 1000, true, 'Walls');
 				
 				// player sprites and properties
-				this.car1 = this.add.sprite(270, 2900, 'car1');
-				this.car1.anchor.setTo(0.5, 0.5);
-				this.car2 = this.add.sprite(560, 2900, 'car2');
-				this.car2.anchor.setTo(0.5, 0.5);
-				this.physics.arcade.enable(this.car1);
-				this.physics.arcade.enable(this.car2);
-				this.car1.speed = 0;
-				this.car2.speed = 0;
-				this.car1.body.width *= 0.5;
-				this.car2.body.width *= 0.5;
-				this.car1.body.height *= 0.5;
-				this.car2.body.height *= 0.5;
+				this.p = this.add.sprite(0, 0, 'player');
+				this.p.anchor.setTo(0.5, 0.5);
+				this.npc = this.add.sprite(0, 0, 'npc');
+				this.phone = this.add.sprite(0, 0, 'phone');
+				this.physics.arcade.enable(this.p);
+				this.physics.arcade.enable(this.phone);
+				this.physics.arcade.enable(this.npc);
+				// animations
+				this.p.animations.add('down', [6, 7, 8, 7], 3, true);
+				this.p.animations.add('up', [0, 1, 2, 1], 3, true);
+				this.p.animations.add('left', [9, 10, 11, 10], 3, true);
+				this.p.animations.add('right', [3, 4, 5, 4], 3, true);
+				
+				// UI
+				this.UI = this.add.sprite(0, 500, 'UI');
+				this.style = {font: "16px Verdana", fill: "#ffffff", align: "left" };
+				this.UI.text = this.add.text(15, 515, "", this.style);
+				this.UI.fixedToCamera = true;
+				this.UI.text.fixedToCamera = true;
+				this.camera.follow(this.p);
+				
+				// audio
+				this.music = this.add.audio('music', 0.3, true);
+				this.sound.walk = this.add.audio('walk', 0.3);
+				this.sound.select = this.add.audio('select', 0.25);
 				
 				// set keyboard controls
 				this.keys = this.input.keyboard.createCursorKeys();
@@ -39,80 +49,9 @@ main.prototype = {
 				this.keys.d = this.input.keyboard.addKey(Phaser.Keyboard.D);
 				this.keys.space = this.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
 				
-				// parameters
-				this.maxSpd = 80;
-				this.slow = 4;
-				this.camera.follow(this.cam);
-				
-				this.win = this.add.sprite(0, 0, 'win');
-				this.win.fixedToCamera = true;
-				this.win.visible = false;
-				this.fail = this.add.sprite(0, 0, 'fail');
-				this.fail.fixedToCamera = true;
-				this.fail.visible = false;
 		},
 		update: function() {
-				if(this.physics.arcade.collide(this.car1, this.walls) || this.physics.arcade.collide(this.car2, this.walls) || (this.car1.y - this.cam.y) > 310 || (this.car2.y - this.cam.y) > 310) {
-						this.keys.space.onDown.add(function() {this.state.start('Game')}, this);
-						this.fail.visible = true;
-						this.paused = true;
-				}
-				if(this.car1.y < 200 && this.car2.y < 200 && this.car2.x < 500) {
-						this.win.visible = true;
-						this.pased = true;
-				}
-				if(this.cam.y > 200)
-						this.cam.y -= 1;
-				else
-						this.cam.y = 200;
-				
-				// car1
-				if(this.keys.w.isDown) {
-					if(this.car1.speed === this.maxSpd)
-						this.car1.speed = this.maxSpd;
-					else
-						this.car1.speed += this.slow;
-				} else if(this.car1.speed > 0) {
-						this.car1.speed -= this.slow;
-				} else if(this.keys.s.isDown) {
-						if(this.car1.speed === -this.maxSpd)
-								this.car1.speed = -this.maxSpd;
-						else
-								this.car1.speed -= this.slow;
-				} else if(this.car1.speed < 0) {
-						this.car1.speed += this.slow;
-				}
-				if(this.keys.a.isDown) {
-					this.car1.angle -= 3;
-				} else if(this.keys.d.isDown) {
-					this.car1.angle += 3;
-				}
-				
-				// car2
-				if(this.keys.up.isDown) {
-					if(this.car2.speed === this.maxSpd)
-						this.car2.speed = this.maxSpd;
-					else
-						this.car2.speed += this.slow;
-				} else if(this.car2.speed > 0) {
-						this.car2.speed -= this.slow;
-				} else if(this.keys.down.isDown) {
-						if(this.car2.speed === -this.maxSpd)
-								this.car2.speed = -this.maxSpd;
-						else
-								this.car2.speed -= this.slow;
-				} else if(this.car2.speed < 0) {
-						this.car2.speed += this.slow;
-				}
-				if(this.keys.left.isDown) {
-					this.car2.angle -= 3;
-				} else if(this.keys.right.isDown) {
-					this.car2.angle += 3;
-				}
-				
-				// car movement
-				this.physics.arcade.velocityFromRotation(this.car1.rotation - 1.57079633, this.car1.speed, this.car1.body.velocity);
-				this.physics.arcade.velocityFromRotation(this.car2.rotation - 1.57079633, this.car2.speed, this.car2.body.velocity);
+				this.physics.arcade.collide(this.p, this.walls) 
 				
 		}
 }

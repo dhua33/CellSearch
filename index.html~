@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta charset="utf-8">
-    <title>Sports Kart Dual Dash</title>
+    <title>Cell Search</title>
     <script src="js/phaser.min.js"></script>
     <script src="js/Boot.js"></script>
     <script src="js/Preloader.js"></script>
@@ -35,63 +35,66 @@ body
 </script>
 <div id="game"></div>
 <div id="readme">
-<h2>Sports Kart Dual Dash</h2>
+<h2>Cell Search</h2>
 <ul>
 
 <li><strong>High Concept:</strong>
-Control two cars and try to get to the end.
+Find a man's lost cell phone.
 </li>
 
 <li><strong>Player Experience Goals:</strong>
-Multitasking by controlling two cars and avoiding getting off track.
+Simple RPG elements such as NPC, world, and object interaction, all in a simple maze game.
 </li>
 
 <li><strong>Genre:</strong>
-Racing Puzzle Maze
+Maze
 </li>
 
 <li><strong>Game play:</strong>
-Players use arrow keys and wasd to control two different cars and navigate the track to reach the end. The w and up arrow key accelerates the cars, and the left, right, a, and d keys turn the cars. The s and down keys decelerate. Having one car hit a wall or making it go off screen will make the player lose.
+Use the arrow keys or WASD to move and spacebar to talk to the NPC and pick up the quest item.
 </li>
 
 <li><strong>Prototype goal:</strong>
-Create a simple racing puzzle maze game using tilemaps and having the player control two cars.
+Create a simple maze game using tilemaps and having the player have the ability to use different keys to move.
 </li>
 
 <li><strong>Features:</strong>
-Simple gameplay, top-down vehicle movement, and one player controlling two cars simultaneously.
+Basic RPG movement and NPC and object interaction.
 </li>
 
 <li><strong>Setting/Premise:</strong>
-A race track.
+In a maze in some place.
 </li>
 
 <li><strong>Story:</strong>
-None.
+Someone lost their cell phone in a maze. He wants you to find it for him since he can't do it himself.
 </li>
 
 <li><strong>Target Audience:</strong>
-Everyone 10 and up who has interest in sports cars and multitasking.
+Everyone 10 and up who has interest in cell phones and mazes.
 </li>
 
 <li><strong>Play time:</strong>
-2-5 mins.
+1-5 mins.
 </li>
 
 <li><strong>Strategies:</strong>
-If it's too hard, slow down and maybe even control one car at a time.
+Talk to the NPC and track your movement.
 </li>
 
 <li><strong>Prototype Assets:</strong>
-Tilemap: http://opengameart.org/content/race-track-tiles 
-Cars: 
-http://opengameart.org/content/car-racer 
+Phone: http://www.pdclipart.org/displayimage.php?album=search&cat=0&pos=67 
+Tilemap: Buch http://opengameart.org/content/the-field-of-the-floating-islands 
+Sprites by Antifarea: 
+http://opengameart.org/content/antifareas-rpg-sprite-set-1-enlarged-w-transparent-background-fixed 
+Select: 
+https://www.freesound.org/people/killkhan/sounds/150222/ 
 Music: 
-"Dream Racing" (prozax / http://ocremix.org) 
+"Journey of Solitude" (Russell Cox / http://ocremix.org) 
 
 </li>
 
-<li><strong>Prototype Closest Other Game: Tanks, http://www.gamedevacademy.org/html5-phaser-tutorial-top-down-games-with-tiled/</strong>
+<li><strong>Prototype Closest Other Game:</strong>
 
 </li>
 

@@ -15,31 +15,49 @@ main.prototype = {
 				this.map.setCollisionBetween(1, 1000, true, 'Walls');
 				
 				// player sprites and properties
-				this.p = this.add.sprite(0, 0, 'player');
+				this.phone = this.add.sprite(535, 30, 'phone');
+				this.p = this.add.sprite(300, 1500, 'player');
 				this.p.anchor.setTo(0.5, 0.5);
-				this.npc = this.add.sprite(0, 0, 'npc');
-				this.phone = this.add.sprite(0, 0, 'phone');
+				this.p.height *= 0.25;
+				this.p.width *= 0.25;
+				this.npc = this.add.sprite(100, 1400, 'npc');
+				this.npc.anchor.setTo(0.5, 0.5);
+				this.npc.height *= 0.25;
+				this.npc.width *= 0.25;
+				this.phone.width *= 0.05;
+				this.phone.height *= 0.05;
 				this.physics.arcade.enable(this.p);
 				this.physics.arcade.enable(this.phone);
 				this.physics.arcade.enable(this.npc);
+				this.npc.body.immovable = true;
+				this.p.body.collideWorldBounds = true;
 				// animations
-				this.p.animations.add('down', [6, 7, 8, 7], 3, true);
-				this.p.animations.add('up', [0, 1, 2, 1], 3, true);
-				this.p.animations.add('left', [9, 10, 11, 10], 3, true);
-				this.p.animations.add('right', [3, 4, 5, 4], 3, true);
+				this.p.animations.add('down', [7, 8, 7, 6], 7);
+				this.p.animations.add('up', [1, 2, 1, 0], 7);
+				this.p.animations.add('left', [10, 11, 10, 9], 7);
+				this.p.animations.add('right', [4, 5, 4, 3], 7);
+				this.npc.animations.add('down', [7], 3, true);
+				this.npc.animations.add('up', [1], 3, true);
+				this.npc.animations.add('left', [10], 3, true);
+				this.npc.animations.add('right', [4], 3, true);
+				this.npc.animations.play('down');
 				
 				// UI
-				this.UI = this.add.sprite(0, 500, 'UI');
-				this.style = {font: "16px Verdana", fill: "#ffffff", align: "left" };
-				this.UI.text = this.add.text(15, 515, "", this.style);
+				this.UI = this.add.sprite(0, 250, 'UI');
+				this.UI.height *= 0.5;
+				this.UI.width *= 0.5;
+				this.style = {font: "12px Verdana", fill: "#ffffff", align: "left" };
+				this.UI.text = this.add.text(15, 258, "", this.style);
 				this.UI.fixedToCamera = true;
 				this.UI.text.fixedToCamera = true;
+				this.UI.visible = false;
 				this.camera.follow(this.p);
 				
 				// audio
 				this.music = this.add.audio('music', 0.3, true);
 				this.sound.walk = this.add.audio('walk', 0.3);
 				this.sound.select = this.add.audio('select', 0.25);
+				this.music.play();
 				
 				// set keyboard controls
 				this.keys = this.input.keyboard.createCursorKeys();
@@ -49,9 +67,73 @@ main.prototype = {
 				this.keys.d = this.input.keyboard.addKey(Phaser.Keyboard.D);
 				this.keys.space = this.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
 				
+				// dialogue control
+				this.keys.space.onDown.add(this.npcTalk, this);
+				this.win = false;
+				this.npcPrompt = false;
+				this.inDialogue = false;
+				this.dialogue = [];
+				this.dialogue[0] = "Hello";
+				this.npc.i = 0;
+		},
+		npcTalk: function() {
+				if(this.npcPrompt) {
+						this.inDialogue = true;
+						
+				} else {
+						this.inDialogue = false;
+				}
 		},
 		update: function() {
-				this.physics.arcade.collide(this.p, this.walls) 
+				this.physics.arcade.collide(this.p, this.walls);
+				this.p.body.velocity.x = 0;
+				this.p.body.velocity.y = 0;
 				
+				// movement
+				if(this.keys.w.isDown || this.keys.up.isDown) {
+						this.p.animations.play('up');
+						this.p.body.velocity.y = -80;
+						this.sound.walk.play('', 0, 0.03, false, false);
+				} else if(this.keys.s.isDown || this.keys.down.isDown) {
+						this.p.animations.play('down');
+						this.p.body.velocity.y = 80;
+						this.sound.walk.play('', 0, 0.03, false, false);
+				} else if(this.keys.a.isDown || this.keys.left.isDown) {
+						this.p.animations.play('left');
+						this.p.body.velocity.x = -80;
+						this.sound.walk.play('', 0, 0.03, false, false);
+				} else if(this.keys.d.isDown || this.keys.right.isDown) {
+						this.p.animations.play('right');
+						this.p.body.velocity.x = 80;
+						this.sound.walk.play('', 0, 0.03, false, false);
+				} else {
+						this.p.animations.stop();
+				}
+				
+				// npc tracking
+				if(Math.abs(this.p.x - this.npc.x) < Math.abs(this.p.y - this.npc.y) ) {
+						if(this.p.y > this.npc.y)
+								this.npc.animations.play('down');
+						else
+								this.npc.animations.play('up');
+				} else {
+						if(this.p.x > this.npc.x)
+								this.npc.animations.play('right');
+						else
+								this.npc.animations.play('left');
+				}
+				// collision and prompt
+				this.physics.arcade.collide(this.p, this.npc);
+				if((this.p.x > this.npc.x - 30 && this.p.x < this.npc.x + 30) && (this.p.y > this.npc.y - 30 && this.p.y < this.npc.y + 30)) {
+						if(this.inDialogue === false) {
+								this.npcPrompt = true;
+								this.UI.visible = true;
+								this.UI.text.setText("                           Press Space to talk");
+						}
+				} else {
+						this.npcPrompt = false;
+						this.UI.visible = false;
+						this.UI.text.setText("");
+				}
 		}
 }
